@@ -27,7 +27,7 @@ dbAction connection = runRedis connection $ do
   liftIO $ print (deserialize $ hello,deserialize $ world)
 
 deserialize :: Either Reply (Maybe ByteString) -> Either Reply Tomek
-deserialize result = result >>= (\y ->  deserializeTomek y)  
+deserialize result = result >>=  deserializeTomek
 
 deserializeTomek:: Maybe ByteString -> Either Reply Tomek
 deserializeTomek (Just value) =  mapLeft (\error -> SingleLine $ pack error) (S.decode value)
@@ -35,7 +35,7 @@ deserializeTomek Nothing = Left $ SingleLine "empty"
 
 data Tomek = Tomek {
   age :: Int,
-  size::Int
+  size :: Int
 }
   deriving (Show, Generic)
 
